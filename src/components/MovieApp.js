@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { AiOutlineSearch } from 'react-icons/ai';
-import './MovieApp.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { AiOutlineSearch } from "react-icons/ai";
+import "./MovieApp.css";
 
 const MovieRecommendations = () => {
   const [movies, setMovies] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('popularity.desc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("popularity.desc");
   const [genres, setGenres] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState("");
   const [expandedMovieId, setExpandedMovieId] = useState(null);
 
   useEffect(() => {
     const fetchGenres = async () => {
       const response = await axios.get(
-        'https://api.themoviedb.org/3/genre/movie/list',
+        "https://api.themoviedb.org/3/genre/movie/list",
         {
           params: {
-            api_key: '0f030f55b6e37d80268f9cdf5045a1b4',
+            api_key: "0f030f55b6e37d80268f9cdf5045a1b4",
           },
         }
       );
@@ -29,10 +29,10 @@ const MovieRecommendations = () => {
   useEffect(() => {
     const fetchMovies = async () => {
       const response = await axios.get(
-        'https://api.themoviedb.org/3/discover/movie',
+        "https://api.themoviedb.org/3/discover/movie",
         {
           params: {
-            api_key: '0f030f55b6e37d80268f9cdf5045a1b4',
+            api_key: "0f030f55b6e37d80268f9cdf5045a1b4",
             sort_by: sortBy,
             page: 1,
             with_genres: selectedGenre,
@@ -59,10 +59,10 @@ const MovieRecommendations = () => {
 
   const handleSearchSubmit = async () => {
     const response = await axios.get(
-      'https://api.themoviedb.org/3/search/movie',
+      "https://api.themoviedb.org/3/search/movie",
       {
         params: {
-          api_key: '0fa2853e7c4d6c8f146aba861c5e4a06',
+          api_key: "0fa2853e7c4d6c8f146aba861c5e4a06",
           query: searchQuery,
         },
       }
@@ -78,7 +78,13 @@ const MovieRecommendations = () => {
     <div>
       <h1>MovieHouse</h1>
       <div className="search-bar">
-        <input type="text" placeholder="Search movies..." value={searchQuery} onChange={handleSearchChange} className='search-input'/>
+        <input
+          type="text"
+          placeholder="Search movies..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="search-input"
+        />
         <button onClick={handleSearchSubmit} className="search-button">
           <AiOutlineSearch />
         </button>
@@ -86,12 +92,12 @@ const MovieRecommendations = () => {
       <div className="filters">
         <label htmlFor="sort-by">Sort By:</label>
         <select id="sort-by" value={sortBy} onChange={handleSortChange}>
-          <option value="popularity.desc">Popularity Descending</option>
-          <option value="popularity.asc">Popularity Ascending</option>
-          <option value="vote_average.desc">Rating Descending</option>
-          <option value="vote_average.asc">Rating Ascending</option>
-          <option value="release_date.desc">Release Date Descending</option>
-          <option value="release_date.asc">Release Date Ascending</option>
+          <option value="popularity.asc">Popular</option>
+          <option value="popularity.desc">Least Popular</option>
+          <option value="vote_average.asc">Top Rated</option>
+          <option value="vote_average.desc">Least Rated</option>
+          <option value="release_date.asc">Latest</option>
+          <option value="release_date.desc">Oldest</option>
         </select>
         <label htmlFor="genre">Genre:</label>
         <select id="genre" value={selectedGenre} onChange={handleGenreChange}>
@@ -106,16 +112,22 @@ const MovieRecommendations = () => {
       <div className="movie-wrapper">
         {movies.map((movie) => (
           <div key={movie.id} className="movie">
-            <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={movie.title}
+            />
             <h2>{movie.title}</h2>
-            <p className='rating'>Rating: {movie.vote_average}</p>
+            <p className="rating">Rating: {movie.vote_average}</p>
             {expandedMovieId === movie.id ? (
               <p>{movie.overview}</p>
             ) : (
               <p>{movie.overview.substring(0, 150)}...</p>
             )}
-            <button onClick={() => toggleDescription(movie.id)} className='read-more'>
-              {expandedMovieId === movie.id ? 'Show Less' : 'Read More'}
+            <button
+              onClick={() => toggleDescription(movie.id)}
+              className="read-more"
+            >
+              {expandedMovieId === movie.id ? "Show Less" : "Read More"}
             </button>
           </div>
         ))}
@@ -125,105 +137,3 @@ const MovieRecommendations = () => {
 };
 
 export default MovieRecommendations;
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import "./MovieApp.css";
-// import { AiOutlineSearch } from "react-icons/ai";
-// import axios from "axios";
-
-// export default function MovieApp() {
-//   const [movies, setMovies] = useState([]);
-//   const [searchQuery, setSearchQuery] = useState("");
-//   const [sortBy, setSortBy] = useState("popularity.desc");
-//   const [genres, setGenres] = useState([]);
-//   const [selectedGenre, setSelectedGenre] = useState("");
-
-//   useEffect(() => {
-//     const fetchGenres = async () => {
-//       const response = await axios.get(
-//         "https://api.themoviedb.org/3/search/movie/list",
-//         {
-//           params: {
-//             api_key: "0f030f55b6e37d80268f9cdf5045a1b4",
-//           },
-//         }
-//       );
-//       setGenres(response.data.genres);
-//     };
-//     fetchGenres();
-//   }, []);
-
-//   useEffect(() =>{
-//     const fetchMovies = async () =>{
-//       const response = await axios.get(
-//         'https://api.themoviedb.org/3/discover/movie',
-//       )
-        
-//     }
-//   })
-
-//   const handleSearchChange = (event) => {
-//     setSearchQuery(event.target.value);
-//   };
-//   const handleSearchSubmit = async () => {
-//     const response = await axios.get(
-//       "https://api.themoviedb.org/3/search/movie",
-//       {
-//         params: {
-//           api_key: "0f030f55b6e37d80268f9cdf5045a1b4",
-//           query: searchQuery,
-//         },
-//       }
-//     );
-//   };
-
-//   const handleSortChange = (event) => {
-//     setSortBy(event.target.value);
-//   };
-
-//   const handleGenreChange = (event) => {
-//     setSelectedGenre(event.target.value);
-//   };
-
-//   return (
-//     <div>
-//       <h1>Movie House</h1>
-//       <div className="search-bar">
-//         <input
-//           type="text"
-//           placeholder="Search Movies........."
-//           value={searchQuery}
-//           onChange={handleSearchChange}
-//           className="search-input"
-//         />
-//         <button onClick={handleSearchSubmit} className="search-button">
-//           <AiOutlineSearch />
-//         </button>
-//       </div>
-//       <div className="filters">
-//         <label htmlFor="sort-by">Sort BY:</label>
-//         <select value={sortBy} id="sort-by" onChange={handleSortChange}>
-//           <option value="popularity.asc">Popular</option>
-//           <option value="popularity.desc">Least Popular</option>
-//           <option value="vote_average.asc">Top Rated</option>
-//           <option value="vote_average.desc">Least Rated</option>
-//           <option value="release_date.asc">Latest</option>
-//           <option value="release_date.desc">Oldest</option>
-//         </select>
-//         <label htmlFor="genre">Genre:</label>
-//         <select value={selectedGenre} id="genre" onChange={handleGenreChange}>
-//           <option value="">All Genres</option>
-//           {genres.map((genre) => {
-//             <option key={genre.id} value={genre.id}>
-//               {genre.name}
-//             </option>;
-//           })}
-//         </select>
-//       </div>
-//     </div>
-//   );
-// }
